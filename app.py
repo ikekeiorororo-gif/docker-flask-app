@@ -1,14 +1,14 @@
-from flask import Flask
+from flask import Flask, render_template
+
 app = Flask(__name__)
 
-@app.route("/")
+@app.route('/')
 def hello():
-    return "Hello from suz Flask in Docker!"
+    return "Hello from Dockerized Python!"
 
 @app.route('/about')
 def about():
-    return "This is the About page of my suz Flask app."
+    return render_template('about.html')  # ← ここを変更
 
 if __name__ == "__main__":
-    # host="0.0.0.0" でコンテナ外からアクセス可能にする
     app.run(host="0.0.0.0", port=5000)
