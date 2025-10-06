@@ -6,8 +6,11 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 EXPOSE 5000
 
-# アプリをコピー
-COPY app.py .
 
-# コンテナ起動時に Flask を実行
+# アプリとテンプレートをコピー
+COPY app.py .
+COPY templates/ templates/
+
+# コンテナ起動時のコマンド
 CMD ["python", "app.py"]
+
