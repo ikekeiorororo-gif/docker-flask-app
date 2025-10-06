@@ -40,3 +40,6 @@ def check_env():
         return "HUGGINGFACE_API_KEY is set ✅"
     else:
         return "HUGGINGFACE_API_KEY is NOT set ❌"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
