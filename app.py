@@ -8,7 +8,8 @@ def hello():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')  # ← ここを変更
+    app_version = "1.0.0"  # ここで動的に変数を作る
+    return render_template('about.html', version=app_version)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
