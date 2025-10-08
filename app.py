@@ -1,54 +1,49 @@
 from flask import Flask, render_template, request
-import requests
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
 app = Flask(__name__)
 
-# 安定して無料で使える小型モデル https://api-inference.huggingface.co/models/distilgpt2
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/gpt2"
-HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
-headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
-
+# OpenAI クライアント作成
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 @app.route('/')
-def hello():
-    return "Hello from Render + Docker Flask!"
+def home():
+    return render_template('home.html')
 
-
-@app.route('/huggingface', methods=['GET', 'POST'])
-def huggingface():
+@app.route('/about', methods=['GET', 'POST'])
+def about():
+    prompt = ""
     answer = ""
     if request.method == 'POST':
-        prompt = request.form.get('prompt')
-        try:
-            payload = {"inputs": prompt, "options": {"wait_for_model": True}}
-            response = requests.post(HUGGINGFACE_API_URL, headers=headers, json=payload)
-            
-            # レスポンスステータスと内容を確認
-            print("Status code:", response.status_code)
-            print("Response:", response.text)
-            
-            if response.status_code == 200:
-                result = response.json()
-                if isinstance(result, list):
-                    answer = result[0].get("generated_text", "")
-                else:
-                    answer = str(result)
-            else:
-                answer = f"Error: {response.status_code} - {response.text}"
-        except Exception as e:
-            answer = f"Exception: {str(e)}"
-    return render_template('huggingface.html', answer=answer)
+        prompt = request.form.get('prompt', '')
+        if prompt:
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4.1",
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=500
+                )
+                # 新しい SDK では message はオブジェクトなので .content で取得
+                answer = response.choices[0].message.content
+            except Exception as e:
+                answer = f"Error: {str(e)}"
+        else:
+            answer = "プロンプトを入力してください。"
 
+    return render_template('about.html', answer=answer, prompt=prompt)
 
 @app.route("/check_env")
 def check_env():
-    return "HUGGINGFACE_API_KEY is set ✅" if HUGGINGFACE_API_KEY else "HUGGINGFACE_API_KEY is NOT set ❌"
-
+    if OPENAI_API_KEY:
+        return "OPENAI_API_KEY is set ✅"
+    else:
+        return "OPENAI_API_KEY is NOT set ❌"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

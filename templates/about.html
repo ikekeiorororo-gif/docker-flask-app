@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Page</title>
+</head>
+<body>
+    <h1>チャットアプリ</h1>
+    <form method="POST">
+        <input type="text" name="prompt" placeholder="Type something">
+        <button type="submit">Submit</button>
+    </form>
+    {% if answer %}
+        <p>Answer: {{ answer }}</p>
+    {% endif %}
+</body>
+</html>
