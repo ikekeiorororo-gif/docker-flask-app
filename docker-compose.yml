@@ -1,4 +1,3 @@
-
 version: "3.9"
 services:
   web:
@@ -9,5 +8,5 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app
+      - .:/app  # 開発中のみ
     restart: always
