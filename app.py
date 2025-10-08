@@ -7,17 +7,15 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# 無料で使えるモデル URL に変更
-#HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
-#  "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-3B"
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-3B"
+# 安定して無料で使える小型モデル https://api-inference.huggingface.co/models/distilgpt2
+HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/gpt2"
 HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
 headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
 
 @app.route('/')
 def hello():
-    return "Hello from Render + Docker Flasksuz12!"
+    return "Hello from Render + Docker Flask!"
 
 
 @app.route('/huggingface', methods=['GET', 'POST'])
@@ -26,8 +24,13 @@ def huggingface():
     if request.method == 'POST':
         prompt = request.form.get('prompt')
         try:
-            response = requests.post(HUGGINGFACE_API_URL, headers=headers, json={"inputs": prompt})
-            print(response.text)    
+            payload = {"inputs": prompt, "options": {"wait_for_model": True}}
+            response = requests.post(HUGGINGFACE_API_URL, headers=headers, json=payload)
+            
+            # レスポンスステータスと内容を確認
+            print("Status code:", response.status_code)
+            print("Response:", response.text)
+            
             if response.status_code == 200:
                 result = response.json()
                 if isinstance(result, list):
@@ -35,7 +38,7 @@ def huggingface():
                 else:
                     answer = str(result)
             else:
-                answer = f"Error: {response.status_code}"
+                answer = f"Error: {response.status_code} - {response.text}"
         except Exception as e:
             answer = f"Exception: {str(e)}"
     return render_template('huggingface.html', answer=answer)
@@ -43,10 +46,7 @@ def huggingface():
 
 @app.route("/check_env")
 def check_env():
-    if HUGGINGFACE_API_KEY:
-        return "HUGGINGFACE_API_KEY is set ✅"
-    else:
-        return "HUGGINGFACE_API_KEY is NOT set ❌"
+    return "HUGGINGFACE_API_KEY is set ✅" if HUGGINGFACE_API_KEY else "HUGGINGFACE_API_KEY is NOT set ❌"
 
 
 if __name__ == "__main__":
