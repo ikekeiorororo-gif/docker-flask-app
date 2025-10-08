@@ -15,7 +15,7 @@ headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
 @app.route('/')
 def hello():
-    return "Hello from Dockerized Python1!"
+    return "Hello from Dockerized Python2 ryomo!"
 
 @app.route('/huggingface', methods=['GET', 'POST'])
 def huggingface():
