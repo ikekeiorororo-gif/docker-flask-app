@@ -8,7 +8,9 @@ load_dotenv()
 app = Flask(__name__)
 
 # 無料で使えるモデル URL に変更
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
+#HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
+#  "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-3B"
+HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-3B"
 HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
 headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
