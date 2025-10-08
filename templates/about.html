@@ -1,16 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>About Page</title>
+    <meta charset="UTF-8">
+    <title>-チャットボット-</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        #chat-box {
+            border: 1px solid #ccc;
+            height: 400px;
+            padding: 10px;
+            overflow-y: scroll;
+            background-color: #f9f9f9;
+        }
+        .user-msg {
+            text-align: right;
+            margin: 5px 0;
+        }
+        .bot-msg {
+            text-align: left;
+            margin: 5px 0;
+        }
+        .msg {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+        .user-msg .msg {
+            background-color: #DCF8C6;
+        }
+        .bot-msg .msg {
+            background-color: #eee;
+        }
+        #input-form {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        #input-form input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        #input-form button {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        #input-form button:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-    <h1>チャットアプリ</h1>
-    <form method="POST">
-        <input type="text" name="prompt" placeholder="Type something">
-        <button type="submit">Submit</button>
+    <h1>Chatbot</h1>
+
+    <div id="chat-box">
+        {% if prompt %}
+            <div class="user-msg"><div class="msg">{{ prompt }}</div></div>
+        {% endif %}
+        {% if answer %}
+            <div class="bot-msg"><div class="msg">{{ answer }}</div></div>
+        {% endif %}
+    </div>
+    <div id="thinking" style="display:none; font-style: italic; color: gray; margin-top:5px;">
+    …考え中
+    </div>
+
+
+    <form id="input-form" method="POST">
+        <input type="text" name="prompt" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+        <button type="button" id="clear-btn">Clear</button>
+        
     </form>
-    {% if answer %}
-        <p>Answer: {{ answer }}</p>
-    {% endif %}
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const clearBtn = document.getElementById('clear-btn');
+        clearBtn.addEventListener('click', () => {
+            chatBox.innerHTML = '';
+        });
+    </script>
+
+    <script>
+        const form = document.getElementById('input-form');
+        const thinking = document.getElementById('thinking');
+        const chatBox = document.getElementById('chat-box');
+
+        // 送信ボタン押下時
+        form.addEventListener('submit', () => {
+            thinking.style.display = 'block'; // 表示
+            // 自動スクロール
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // Clearボタン
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            chatBox.innerHTML = '';
+            thinking.style.display = 'none'; // 非表示
+        });
+
+        // ページ読み込み時もスクロール
+        chatBox.scrollTop = chatBox.scrollHeight;
+    </script>
+
+
 </body>
 </html>

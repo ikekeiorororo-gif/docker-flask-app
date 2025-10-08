@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 # OpenAI クライアント作成
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+print("OPENAI_API_KEY:", OPENAI_API_KEY)  # コンテナログで確認
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 @app.route('/')
