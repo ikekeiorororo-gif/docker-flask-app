@@ -8,7 +8,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/gpt2"
+#HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/gpt2"
+HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2"
 HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
 
 headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
