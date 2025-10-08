@@ -15,7 +15,7 @@ headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
 @app.route('/')
 def hello():
-    return "Hello from Render + Docker Flasksuz!"
+    return "Hello from Render + Docker Flasksuz12!"
 
 
 @app.route('/huggingface', methods=['GET', 'POST'])
@@ -25,6 +25,7 @@ def huggingface():
         prompt = request.form.get('prompt')
         try:
             response = requests.post(HUGGINGFACE_API_URL, headers=headers, json={"inputs": prompt})
+            print(response.text)    
             if response.status_code == 200:
                 result = response.json()
                 if isinstance(result, list):
